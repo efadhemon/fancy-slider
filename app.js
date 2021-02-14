@@ -55,7 +55,7 @@ const showImages = (images) => {
     galleryHeader.style.display = 'flex';
     images.forEach(image => {
       let div = document.createElement('div');
-      div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
+      div.className = 'img-item';
       div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
       gallery.appendChild(div)
     })
@@ -68,14 +68,15 @@ let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
   element.classList.toggle('added');
-  let item =sliders.indexOf(img);
-  console.log(item);
-  console.log(item);
+  let item = sliders.indexOf(img);
+  const imageCount = document.getElementById('pic-counter');
   if (item === -1) {
     sliders.push(img);
+    imageCount.innerText = sliders.length;
   }
   if (item > -1) {
     sliders.splice(item, 1);
+    imageCount.innerText = sliders.length;
   }
 }
 var timer
@@ -100,18 +101,14 @@ const createSlider = () => {
   imagesArea.style.display = 'none';
   const duration = document.getElementById('duration').value || 1000;
 
-  if (duration < 0) {
-    alert("Time can't be negative..");
-  } else {
-    sliders.forEach(slide => {
-      let item = document.createElement('div')
-      item.className = "slider-item";
-      item.innerHTML = `<img class="w-100"
+  sliders.forEach(slide => {
+    let item = document.createElement('div')
+    item.className = "slider-item";
+    item.innerHTML = `<img class="w-100"
       src="${slide}"
       alt="">`;
-      sliderContainer.appendChild(item)
-    })
-  }
+    sliderContainer.appendChild(item)
+  })
 
   changeSlide(0)
   timer = setInterval(function () {
@@ -155,5 +152,13 @@ searchBtn.addEventListener('click', function () {
 })
 
 sliderBtn.addEventListener('click', function () {
-  createSlider()
+
+  const duration = document.getElementById('duration').value;
+  if (duration < 0) {
+    alert("Time can't be negative..!")
+  }
+  else{
+    createSlider()
+  }
+
 })
