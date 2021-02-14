@@ -14,6 +14,33 @@ let sliders = [];
 // to create your own api key
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
+
+document.getElementById('search').addEventListener('keyup', function (event) {
+  if (event.key == 'Enter') {
+    document.getElementById('search-btn').click();
+  }
+});
+
+const loadingSpinner = () => {
+  const spinner = document.getElementById('loading-spinner');
+  spinner.classList.toggle('d-none');
+  document.getElementById('images-container').classList.toggle('d-none');
+  document.getElementById('show-error').classList.toggle('d-none');
+}
+
+
+const getImages = (query) => {
+  loadingSpinner();
+  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
+    .then(response => response.json())
+    .then(data => showImages(data.hits))
+    .catch(() => {
+      imagesArea.style.display = 'none'
+      showError.style.display = 'block';
+      showError.innerHTML = '<h1 style ="text-align:center; color:red; margin-top: 50px">Sorry, Images are not Found..!</h1>';
+    })
+}
+
 // show images 
 const showImages = (images) => {
   imagesArea.style.display = 'block';
@@ -34,36 +61,21 @@ const showImages = (images) => {
     })
     showError.style.display = 'none';
   }
-
-}
-
-document.getElementById('search').addEventListener('keyup', function (event) {
-  if (event.key == 'Enter') {
-    document.getElementById('search-btn').click();
-  }
-});
-
-const getImages = (query) => {
-  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
-    .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(() => {
-      showError.style.display = 'block';
-      showError.innerHTML = '<h1 style ="text-align:center; color:red; margin-top: 50px">Sorry, Images are not Found..!</h1>';
-    })
+  loadingSpinner()
 }
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
   element.classList.toggle('added');
-  let item = sliders.indexOf(img);
+  let item =sliders.indexOf(img);
+  console.log(item);
   console.log(item);
   if (item === -1) {
     sliders.push(img);
   }
-  if (item !== -1) {
-    sliders.pop(img);
+  if (item > -1) {
+    sliders.splice(item, 1);
   }
 }
 var timer
