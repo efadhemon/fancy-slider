@@ -162,3 +162,9 @@ sliderBtn.addEventListener('click', function () {
   }
 
 })
+
+document.getElementById('duration').addEventListener('keyup', function (event) {
+  if (event.key == 'Enter') {
+    sliderBtn.click();
+  }
+});
